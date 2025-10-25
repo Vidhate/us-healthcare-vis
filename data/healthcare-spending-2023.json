@@ -1,0 +1,227 @@
+{
+  "metadata": {
+    "title": "U.S. Healthcare Spending Data 2023",
+    "version": "1.0.0",
+    "lastUpdated": "2025-10-18",
+    "dataYear": 2023,
+    "description": "Comprehensive breakdown of U.S. national health expenditures with hierarchical categorization and payer breakdowns",
+    "totalGDP": {
+      "amount": 27960,
+      "sources": [
+        {
+          "organization": "U.S. Bureau of Economic Analysis",
+          "title": "Gross Domestic Product, 2023",
+          "url": "https://www.bea.gov/data/gdp/gross-domestic-product",
+          "publicationDate": "2024-01-25",
+          "accessDate": "2025-10-18",
+          "dataYear": 2023
+        }
+      ]
+    },
+    "totalPopulation": {
+      "count": 336.3,
+      "sources": [
+        {
+          "organization": "U.S. Census Bureau",
+          "title": "U.S. Population Estimates 2023",
+          "url": "https://www.census.gov/popclock/",
+          "publicationDate": "2023-12-31",
+          "accessDate": "2025-10-18",
+          "dataYear": 2023
+        }
+      ]
+    },
+    "perCapitaSpending": {
+      "amount": 14570,
+      "sources": [
+        {
+          "organization": "CMS Office of the Actuary",
+          "title": "National Health Expenditures 2023 Highlights",
+          "url": "https://www.cms.gov/files/document/highlights.pdf",
+          "publicationDate": "2024-12-18",
+          "accessDate": "2025-10-18",
+          "specificCitation": "Page 1",
+          "dataYear": 2023
+        }
+      ]
+    },
+    "license": {
+      "type": "CC-BY-4.0",
+      "url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Healthcare Spending Visualization Project. Data sourced from CMS, KFF, and other public sources."
+    }
+  },
+  "root": {
+    "id": "total-nhe",
+    "name": "Total National Health Expenditures",
+    "level": 0,
+    "totalSpending": {
+      "amount": 4900.0,
+      "year": 2023,
+      "sources": [
+        {
+          "organization": "CMS Office of the Actuary",
+          "title": "National Health Expenditures 2023 Highlights",
+          "url": "https://www.cms.gov/files/document/highlights.pdf",
+          "publicationDate": "2024-12-18",
+          "accessDate": "2025-10-18",
+          "specificCitation": "Page 1, Total NHE",
+          "dataYear": 2023
+        }
+      ]
+    },
+    "payerBreakdown": {
+      "privateInsurance": {
+        "amount": 1464.6,
+        "percentage": 29.9,
+        "sources": [
+          {
+            "organization": "CMS Office of the Actuary",
+            "title": "NHE Fact Sheet",
+            "url": "https://www.cms.gov/data-research/statistics-trends-and-reports/national-health-expenditure-data/nhe-fact-sheet",
+            "publicationDate": "2024-12-18",
+            "accessDate": "2025-10-18",
+            "specificCitation": "Private Health Insurance section",
+            "dataYear": 2023
+          }
+        ]
+      },
+      "medicare": {
+        "amount": 1029.8,
+        "percentage": 21.0,
+        "sources": [
+          {
+            "organization": "CMS Office of the Actuary",
+            "title": "NHE Fact Sheet",
+            "url": "https://www.cms.gov/data-research/statistics-trends-and-reports/national-health-expenditure-data/nhe-fact-sheet",
+            "publicationDate": "2024-12-18",
+            "accessDate": "2025-10-18",
+            "specificCitation": "Medicare section",
+            "dataYear": 2023
+          }
+        ]
+      },
+      "medicaid": {
+        "amount": 871.7,
+        "percentage": 17.8,
+        "sources": [
+          {
+            "organization": "CMS Office of the Actuary",
+            "title": "NHE Fact Sheet",
+            "url": "https://www.cms.gov/data-research/statistics-trends-and-reports/national-health-expenditure-data/nhe-fact-sheet",
+            "publicationDate": "2024-12-18",
+            "accessDate": "2025-10-18",
+            "specificCitation": "Medicaid section",
+            "dataYear": 2023
+          }
+        ]
+      },
+      "outOfPocket": {
+        "amount": 505.7,
+        "percentage": 10.3,
+        "sources": [
+          {
+            "organization": "CMS Office of the Actuary",
+            "title": "NHE Fact Sheet",
+            "url": "https://www.cms.gov/data-research/statistics-trends-and-reports/national-health-expenditure-data/nhe-fact-sheet",
+            "publicationDate": "2024-12-18",
+            "accessDate": "2025-10-18",
+            "specificCitation": "Out-of-Pocket section",
+            "dataYear": 2023
+          }
+        ]
+      },
+      "other": {
+        "amount": 1028.2,
+        "percentage": 21.0,
+        "description": "Other third-party payers and programs including CHIP, VA, DOD, workers' compensation, and public health activities",
+        "sources": [
+          {
+            "organization": "CMS Office of the Actuary",
+            "title": "NHE Fact Sheet",
+            "url": "https://www.cms.gov/data-research/statistics-trends-and-reports/national-health-expenditure-data/nhe-fact-sheet",
+            "publicationDate": "2024-12-18",
+            "accessDate": "2025-10-18",
+            "specificCitation": "Other Third Party Payers section",
+            "dataYear": 2023
+          }
+        ]
+      }
+    },
+    "percentageOfGDP": 17.6,
+    "growth": {
+      "yearOverYearGrowth": 7.5,
+      "comparedToYear": 2022,
+      "sources": [
+        {
+          "organization": "CMS Office of the Actuary",
+          "title": "National Health Expenditures 2023 Highlights",
+          "url": "https://www.cms.gov/files/document/highlights.pdf",
+          "publicationDate": "2024-12-18",
+          "accessDate": "2025-10-18",
+          "specificCitation": "Page 1, Growth rate",
+          "dataYear": 2023
+        }
+      ]
+    },
+    "description": "Total annual health spending in the United States, including all goods and services related to healthcare delivery, public health activities, and health insurance administration",
+    "hasMoreDetail": true,
+    "notes": [
+      "Includes spending by all payers: private insurance, government programs, and out-of-pocket",
+      "Represents 17.6% of GDP, returning to pre-pandemic levels after peak of 19.5% in 2020",
+      "Per capita spending: $14,570 per person",
+      "Growth rate of 7.5% significantly higher than 2022 (4.6%) and pre-pandemic average (4.1%)"
+    ],
+    "lastUpdated": "2025-10-18",
+    "dataQuality": "high",
+    "children": []
+  },
+  "glossary": {
+    "National Health Expenditures": {
+      "definition": "Total annual spending for healthcare goods and services, public health activities, government administration, net cost of health insurance, and investment related to healthcare",
+      "sources": [
+        {
+          "organization": "CMS",
+          "title": "National Health Expenditure Accounts Methodology Paper",
+          "url": "https://www.cms.gov/files/document/definitions-sources-and-methods.pdf",
+          "publicationDate": "2023-01-01",
+          "accessDate": "2025-10-18",
+          "dataYear": 2023
+        }
+      ]
+    },
+    "Out-of-Pocket": {
+      "definition": "Direct spending by consumers for healthcare goods and services, including deductibles, coinsurance, and copayments. Does not include health insurance premiums",
+      "sources": [
+        {
+          "organization": "CMS",
+          "title": "Quick Definitions for NHEA Categories",
+          "url": "https://www.cms.gov/files/document/quick-definitions-national-health-expenditures-accounts-nhea-categories.pdf",
+          "publicationDate": "2023-01-01",
+          "accessDate": "2025-10-18",
+          "dataYear": 2023
+        }
+      ]
+    }
+  },
+  "methodology": {
+    "dataCollection": "Data collected systematically from tier-1 government sources (CMS, CDC, Census Bureau) and tier-2 research organizations (KFF, Milbank Memorial Fund). All data points cross-referenced with multiple sources where possible.",
+    "categorization": "Follows official CMS National Health Expenditure Accounts (NHEA) categorization methodology. Additional subcategories created based on research literature and clinical practice patterns.",
+    "limitations": [
+      "Some subcategories estimated from percentage allocations due to lack of direct CMS reporting",
+      "State-level data not available for all categories",
+      "Demographic breakdowns limited to categories where CMS publishes age-specific data",
+      "2023 data finalized in December 2024; minor revisions possible in future CMS updates"
+    ],
+    "sources": [
+      {
+        "organization": "CMS Office of the Actuary",
+        "title": "National Health Expenditure Accounts Methodology Paper, 2023",
+        "url": "https://www.cms.gov/files/document/definitions-sources-and-methods.pdf",
+        "publicationDate": "2023-01-01",
+        "accessDate": "2025-10-18",
+        "dataYear": 2023
+      }
+    ]
+  }
+}

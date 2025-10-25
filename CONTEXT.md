@@ -1,58 +1,107 @@
 # Healthcare Spending Visualization - Project Context & Goals
 
-**Last Updated:** October 18, 2025  
+**Last Updated:** October 24, 2025  
 **Project Owner:** Vidhate  
-**Current Phase:** Data Collection & Structuring (Phase 1-2)
+**Current Phase:** Data Collection & Structuring (Phase 1-2)  
+**Visualization Strategy:** Sankey-First (Option C)
 
 ---
 
 ## 🎯 PROJECT GOAL
 
-Build an **interactive website** that visualizes all U.S. healthcare spending data in a hierarchical, drill-down format. Users should be able to:
+Build an **interactive Sankey diagram website** that visualizes U.S. healthcare spending as money flows. Users should be able to:
 
-1. Start at the highest level (Total National Health Expenditures: $4.9T)
-2. Click to expand into major categories (Hospital Care, Physician Services, etc.)
-3. Continue drilling down into subcategories recursively
-4. See payer breakdown at every level (Private Insurance, Medicare, Medicaid, Out-of-Pocket, Other)
+1. See how money flows from Total → Categories → Subcategories (left to right)
+2. Click any flow to isolate and highlight that specific path
+3. Trace spending through multiple levels (expandable infinitely to the right)
+4. See payer breakdowns at every level (who pays for what)
 5. View all data sources with direct links to verify information
 
 ### Core Principles
 - **Systematic & Methodical**: Build from top-down, complete each level before moving deeper
 - **Data Quality First**: Every number backed by trustworthy sources
 - **Clean Structure**: All data in validated JSON, updateable as new data emerges
-- **Visualization Later**: Focus on data accuracy first, UI/visualization at the end
+- **Sankey-First Visualization**: Focus on flow representation, add other views later if needed
 
 ---
 
-## 📊 PROJECT VISION
+## 📊 VISUALIZATION STRATEGY (OPTION C)
 
-### User Experience Goal
-A user visits the website and sees:
+### Primary Visualization: Interactive Sankey Diagram
+
+**Why Sankey?**
+- Healthcare spending IS a flow (money moves from sources → uses)
+- Width of flows = proportional to spending (instant visual comparison)
+- Can trace specific paths (e.g., "How much Medicare money goes to hospital inpatient care?")
+- Intuitive for understanding "follow the money"
+- Expandable infinitely to the right for deeper detail
+
+**Perspective: Category-First** (User Decision)
 ```
-Total U.S. Healthcare Spending: $4.9 Trillion (2023)
-├─ [Click] Hospital Care: $1.52T (31%)
-│   ├─ [Click] Inpatient Services: $XXX B
-│   ├─ [Click] Outpatient/ER: $XXX B
-│   └─ ...
-├─ [Click] Physician & Clinical Services: $978B (20%)
-│   ├─ [Click] Primary Care: $245B (25%)
-│   ├─ [Click] Specialist Care: $450B (46%)
-│   └─ ...
-└─ [Click] Prescription Drugs: $449.7B (9.2%)
-    └─ ...
+[Total NHE]  →  [10 Major Categories]  →  [Subcategories]  →  [Further Detail]
+   $4.9T           Hospital ($1.52T)         Inpatient
+                   Physician ($978B)         Primary Care
+                   Rx Drugs ($449.7B)        Specialist Care
+                   etc.                      Surgery
+                                            etc.
 ```
 
-At **every level**, show:
-- Total spending amount
-- Percentage of parent category
-- Breakdown by payer source (who pays)
-- Link to data sources
+**Core Interaction: Click to Isolate Flows** (User Decision)
+- Click any node → highlights only flows connected to it
+- Click a flow → shows detailed breakdown + sources
+- Hover → tooltip with amounts, percentages, sources
+- Reset button → return to full view
 
-### Why This Matters
-- Makes healthcare spending **transparent and understandable**
-- Helps policymakers make **evidence-based decisions**
-- Enables citizens to understand where their **healthcare dollars go**
-- Creates a **go-to resource** for healthcare spending data
+**Desktop-First** (User Decision)
+- Not optimizing for mobile initially
+- Focus on rich desktop experience
+- Mobile can come later if needed
+
+### Secondary Visualization: Hierarchical Tree (Future)
+- Add later if users request it
+- Good for showing complete structure
+- Complementary to Sankey for different questions
+
+---
+
+## 🎨 SANKEY VISUALIZATION EXAMPLES
+
+### Example 1: Category Flow (Primary View)
+```
+Total NHE ($4.9T)
+├─────→ Hospital Care ($1,519.7B) ────→ Inpatient ($800B)
+│                                  ├──→ Outpatient ($500B)
+│                                  └──→ Emergency ($219.7B)
+│
+├─────→ Physician Services ($978B) ───→ Primary Care ($245B)
+│                                  ├──→ Specialists ($450B)
+│                                  ├──→ Surgery ($180B)
+│                                  └──→ Labs ($103B)
+│
+└─────→ Prescription Drugs ($449.7B) ─→ Retail ($300B)
+                                     ├─→ Mail Order ($100B)
+                                     └─→ Specialty ($49.7B)
+```
+
+### Example 2: Payer View (Alternative/Future View)
+```
+Private Insurance ($1,464.6B)
+├─────→ Hospital Care ($455.9B)
+├─────→ Physician Services ($366.8B)
+└─────→ Prescription Drugs ($xxx B)
+
+Medicare ($1,029.8B)
+├─────→ Hospital Care ($380B)
+├─────→ Physician Services ($269B)
+└─────→ etc.
+```
+
+### Interactive Features
+1. **Click Node** → Isolate all flows to/from that node
+2. **Click Flow** → Show details popup (amount, %, sources, payer breakdown)
+3. **Hover** → Tooltip with quick stats
+4. **Filter** → Show/hide specific payers or categories
+5. **Expand** → Add more levels to the right dynamically
 
 ---
 
@@ -124,9 +173,11 @@ Only add where data readily available and policy-relevant.
 │
 ├── scripts/
 │   └── validate-data.js                 ← Validation script (COMPLETED)
+│   └── (future) transform-to-sankey.js  ← Convert JSON to Sankey format
 │
 ├── src/
 │   └── types.ts                         ← TypeScript schema definitions (COMPLETED)
+│   └── (future) components/             ← React components for Sankey
 │
 ├── docs/
 │   └── (No docs folder yet, but research documents provided in chat context)
@@ -148,12 +199,13 @@ Only add where data readily available and policy-relevant.
    - **Current State:** Only root node populated, children array empty
    - **Schema:** Follows TypeScript definitions in `src/types.ts`
    - **Validation:** Run `npm run validate` to check
+   - **Note:** This hierarchical structure easily transforms to Sankey format
 
 2. **`src/types.ts`**
    - **Purpose:** Complete TypeScript interface definitions
    - **Contains:** 
      - `SpendingCategory` - structure for each node
-     - `PayerBreakdown` - how to split spending by payer
+     - `PayerBreakdown` - how to split spending by payer (creates flows)
      - `DataSource` - citation structure
      - `HealthcareSpendingData` - root structure
    - **Use:** Reference this when adding new categories
@@ -188,8 +240,8 @@ These documents were uploaded and contain valuable data:
      - Phase 2: Systematic Data Collection
      - Phase 3: Data Structuring & Storage
      - Phase 4: Data Quality Assurance
-     - Phase 5: Visualization Development
-     - Phase 6: User Experience
+     - Phase 5: Visualization Development (NOW: Sankey-focused)
+     - Phase 6: User Experience (NOW: Desktop, click-to-isolate)
      - Phase 7: Launch & Maintenance
    - **Use:** Reference for understanding overall approach
 
@@ -239,6 +291,7 @@ Every category in the JSON follows this structure:
     sources: [/* DataSource objects */]
   },
   
+  // THIS CREATES FLOWS IN SANKEY!
   payerBreakdown: {
     privateInsurance: { amount: X, percentage: Y, sources: [...] },
     medicare: { amount: X, percentage: Y, sources: [...] },
@@ -255,25 +308,41 @@ Every category in the JSON follows this structure:
   naicsCodes: ["6211"],               // Industry codes if applicable
   
   parentId: "total-nhe",              // ID of parent category
-  children: [/* Array of SpendingCategory objects */],
+  children: [/* Array of SpendingCategory objects */],  // Creates flows!
   hasMoreDetail: true,                // Can we drill down?
   
   notes: ["Important caveats..."],
-  lastUpdated: "2025-10-18",
+  lastUpdated: "2025-10-24",
   dataQuality: "high"                 // high | medium | estimated
 }
 ```
 
-### Data Source Structure
-```typescript
+### How JSON Transforms to Sankey
+
+Our hierarchical JSON naturally maps to Sankey flows:
+
+```javascript
+// Hierarchical JSON (what we have):
 {
-  organization: "CMS Office of the Actuary",
-  title: "National Health Expenditures 2023",
-  url: "https://www.cms.gov/...",
-  publicationDate: "2024-12-18",
-  accessDate: "2025-10-18",
-  specificCitation: "Table 3, Page 5",
-  dataYear: 2023
+  id: "total-nhe",
+  totalSpending: { amount: 4900 },
+  children: [
+    { id: "hospital-care", totalSpending: { amount: 1519.7 } },
+    { id: "physician-services", totalSpending: { amount: 978 } }
+  ]
+}
+
+// Transforms to Sankey format:
+{
+  nodes: [
+    { id: "total-nhe", name: "Total NHE" },
+    { id: "hospital-care", name: "Hospital Care" },
+    { id: "physician-services", name: "Physician Services" }
+  ],
+  links: [
+    { source: "total-nhe", target: "hospital-care", value: 1519.7 },
+    { source: "total-nhe", target: "physician-services", value: 978 }
+  ]
 }
 ```
 
@@ -377,45 +446,6 @@ npm run validate
 - Note any data gaps found
 - Document next steps
 
-### Example: Adding Hospital Care
-
-```json
-{
-  "id": "hospital-care",
-  "name": "Hospital Care",
-  "level": 1,
-  "totalSpending": {
-    "amount": 1519.7,
-    "year": 2023,
-    "sources": [{
-      "organization": "CMS Office of the Actuary",
-      "title": "NHE Fact Sheet",
-      "url": "https://www.cms.gov/...",
-      "publicationDate": "2024-12-18",
-      "accessDate": "2025-10-18",
-      "dataYear": 2023
-    }]
-  },
-  "payerBreakdown": {
-    "privateInsurance": {
-      "amount": 455.9,
-      "percentage": 30.0,
-      "sources": [/* ... */]
-    },
-    // ... other 4 payers
-  },
-  "percentageOfParent": 31.0,
-  "percentageOfGDP": 5.4,
-  "description": "Spending for inpatient and outpatient hospital services...",
-  "cmsCategory": "Hospital Care",
-  "parentId": "total-nhe",
-  "children": [],
-  "hasMoreDetail": true,
-  "lastUpdated": "2025-10-18",
-  "dataQuality": "high"
-}
-```
-
 ---
 
 ## 🎯 CURRENT STATUS & NEXT STEPS
@@ -425,7 +455,8 @@ npm run validate
 ✅ Validation script working  
 ✅ Root node (Level 0) fully populated and validated  
 ✅ Project structure established  
-✅ Documentation framework in place
+✅ Documentation framework in place  
+✅ **Visualization strategy decided: Sankey-First**
 
 ### Immediate Next Step: Add Level 1 Categories
 
@@ -456,10 +487,11 @@ npm run validate
 - Level 1 categories (10 items): **3-4 hours**
 - Level 2 key categories (15-20 items): **5-6 hours**
 - Level 3 selected deep dives: **4-5 hours**
-- Build visualization: **15-20 hours**
+- Build Sankey transformation script: **2-3 hours**
+- Build interactive Sankey visualization: **15-20 hours**
 - Testing & polish: **5-10 hours**
 
-**Total to working website: 32-45 hours**
+**Total to working website: 35-50 hours**
 
 ---
 
@@ -469,12 +501,48 @@ npm run validate
 # Validate all data against schema and math rules
 npm run validate
 
+# (Future) Transform JSON to Sankey format
+npm run transform-sankey
+
 # (Future) Add a new category using template
 npm run add-category
 
 # (Future) Export summary report
 npm run export-summary
 ```
+
+---
+
+## 🎨 SANKEY VISUALIZATION TECH STACK (FUTURE)
+
+### Recommended Libraries
+1. **D3-Sankey** (Most flexible)
+   - Full control over appearance
+   - Best for custom interactions
+   - Steeper learning curve
+
+2. **Plotly** (Easier, less customization)
+   - Built-in Sankey support
+   - Good hover tooltips
+   - Less control over styling
+
+3. **Google Charts** (Simplest)
+   - Easy to implement
+   - Limited customization
+   - Good for prototyping
+
+**Recommended: D3-Sankey with React wrapper**
+- Best balance of control and modern framework
+- Can implement click-to-isolate easily
+- Extensible for future features
+
+### Key Features to Implement
+1. **Click node** → Isolate connected flows, fade others
+2. **Click flow** → Show modal with details + sources
+3. **Hover** → Tooltip with amount, percentage
+4. **Reset button** → Clear all filters
+5. **Expand button** → Add next level of detail to the right
+6. **Export** → Save as PNG or PDF
 
 ---
 
@@ -498,6 +566,26 @@ npm run export-summary
    - *Why:* Bad data in beautiful UI is still useless
    - *Benefit:* Can iterate on data structure easily
 
+5. **Sankey-First Visualization** (NEW)
+   - *Why:* Better shows flow of money than hierarchical tree
+   - *Benefit:* More intuitive for "follow the money" questions
+   - *Trade-off:* More complex to build, but worth it
+
+6. **Category-First Perspective** (NEW)
+   - *Why:* Most users start with "what is spending on?"
+   - *Benefit:* Natural top-down exploration
+   - *Alternative:* Can add payer-first view later
+
+7. **Click-to-Isolate Interaction** (NEW)
+   - *Why:* Reduces visual clutter, focuses attention
+   - *Benefit:* Can trace specific paths through complex data
+   - *Implementation:* Fade non-selected flows to 10% opacity
+
+8. **Desktop-First** (NEW)
+   - *Why:* Complex data visualization needs screen real estate
+   - *Benefit:* Can focus on rich features without mobile constraints
+   - *Future:* Can simplify for mobile later if needed
+
 ### Key Insights from Data So Far
 
 1. **Primary Care is Underfunded**: Only 5% of healthcare spending vs 7.8% OECD average
@@ -519,6 +607,10 @@ npm run export-summary
    - *Solution:* Version control, clear year labeling
    - *Future:* Build update process for new years
 
+4. **Sankey Complexity**: Many flows can get visually overwhelming
+   - *Solution:* Click-to-isolate feature reduces clutter
+   - *Future:* Add filters to show/hide specific payers or small categories
+
 ---
 
 ## 🎓 FOR FUTURE CONTEXT CONTINUATION
@@ -527,11 +619,13 @@ If you're a new Claude instance reading this:
 
 **Your immediate goal is:** Add the 10 Level 1 categories to the children array of the root node in `data/healthcare-spending-2023.json`
 
+**Visualization goal:** Build interactive Sankey diagram (Category-First, Click-to-Isolate, Desktop)
+
 **You have all the tools you need:**
 1. Schema in `src/types.ts` shows exact structure
 2. Validation script in `scripts/validate-data.js` will check your work
 3. Research documents (in chat history) have data for 3 categories ready to use
-4. This file (CONTEXT.md) explains the full vision
+4. This file (CONTEXT.md) explains the full vision including Sankey strategy
 
 **Start by:**
 1. Reading the current JSON file to see root structure
@@ -545,12 +639,14 @@ If you're a new Claude instance reading this:
 - Validation passes with 0 errors
 - Each category has complete payer breakdown
 - All sources documented
+- Data structure ready for Sankey transformation
 
 **Don't forget to:**
 - Update STATUS.md when complete
 - Calculate percentageOfParent for each child
 - Ensure dataQuality rating is appropriate
 - Add descriptive notes where helpful
+- Remember: this data will power a Sankey diagram!
 
 ---
 
@@ -567,8 +663,14 @@ From user preferences:
 - Explain "why" not just "what"
 - Offer options when multiple paths exist
 
+**Decisions Made Together:**
+- ✅ Sankey-first visualization (Option C)
+- ✅ Category-first perspective
+- ✅ Click-to-isolate interaction
+- ✅ Desktop-first (not mobile initially)
+
 ---
 
-**Last Updated:** October 18, 2025  
+**Last Updated:** October 24, 2025  
 **Next Review:** After Level 1 categories complete  
 **Project Repository:** `/Users/vidhate/Documents/work/healthcare-spends-claude/`

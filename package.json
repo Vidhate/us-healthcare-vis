@@ -1,0 +1,12 @@
+{
+  "name": "healthcare-spending-visualization",
+  "version": "1.0.0",
+  "description": "Interactive US healthcare spending visualization with validated data",
+  "scripts": {
+    "validate": "node scripts/validate-data.js",
+    "test": "npm run validate"
+  },
+  "keywords": ["healthcare", "spending", "visualization", "data"],
+  "author": "",
+  "license": "CC-BY-4.0"
+}
