@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U.S. Healthcare Spending - Interactive Sankey (JSON Version)</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px 40px;
+            background: #f8f9fa;
+        }
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+        }
+        .stat-label {
+            font-size: 0.9em;
+            color: #6c757d;
+            text-transform: uppercase;
+        }
+        .chart-container {
+            padding: 40px;
+            min-height: 700px;
+        }
+        .info {
+            padding: 20px 40px;
+            background: #fff3cd;
+        }
+        .info h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2em;
+            color: #667eea;
+        }
+        .error {
+            padding: 20px 40px;
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 U.S. Healthcare Spending 2023</h1>
+            <p>Interactive Flow Visualization - Data Loaded from JSON</p>
+        </div>
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value">$4.9T</div>
+                <div class="stat-label">Total Spending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">17.6%</div>
+                <div class="stat-label">Of GDP</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">$14,570</div>
+                <div class="stat-label">Per Capita</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="completeness">--</div>
+                <div class="stat-label">Data Complete</div>
+            </div>
+        </div>
+        <div class="info">
+            <h3>📊 How to Use</h3>
+            <p><strong>Hover</strong> over flows to see details. Width = spending amount! <strong>Data loaded from actual JSON file.</strong></p>
+        </div>
+        <div id="loading" class="loading">
+            Loading data from JSON file...
+        </div>
+        <div id="error" class="error" style="display: none;"></div>
+        <div class="chart-container">
+            <div id="sankey"></div>
+        </div>
+    </div>
+    <script>
+        // Load data from actual JSON file
+        async function loadDataFromJSON() {
+            try {
+                const response = await fetch('../data/healthcare_spends_research.json');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('✅ Data loaded successfully from JSON:', data);
+                
+                // Hide loading message
+                document.getElementById('loading').style.display = 'none';
+                
+                // Update completeness stat
+                const totalFromCategories = data.root.children.reduce((sum, cat) => 
+                    sum + cat.totalSpending.amount, 0
+                );
+                const completeness = ((totalFromCategories / 4900) * 100).toFixed(0);
+                document.getElementById('completeness').textContent = `${completeness}%`;
+                
+                return data;
+                
+            } catch (error) {
+                console.error('❌ Error loading JSON:', error);
+                
+                // Hide loading, show error
+                document.getElementById('loading').style.display = 'none';
+                const errorDiv = document.getElementById('error');
+                errorDiv.style.display = 'block';
+                errorDiv.innerHTML = `
+                    <strong>Error loading data file:</strong><br>
+                    ${error.message}<br><br>
+                    <strong>To fix:</strong><br>
+                    1. Make sure you're running this through a local server (not file://)<br>
+                    2. Or use the hardcoded version: index.html<br><br>
+                    <strong>Quick fix - Run a local server:</strong><br>
+                    <code>cd prototype && python3 -m http.server 8000</code><br>
+                    Then open: <code>http://localhost:8000/index-with-json.html</code>
+                `;
+                
+                // Return fallback data
+                return getFallbackData();
+            }
+        }
+
+        function getFallbackData() {
+            console.log('⚠️ Using fallback hardcoded data');
+            return {
+                root: {
+                    children: [
+                        { name: 'Hospital Care', totalSpending: { amount: 1519.7 } },
+                        { name: 'Physician Services', totalSpending: { amount: 978.0 } },
+                        { name: 'Prescription Drugs', totalSpending: { amount: 449.7 } },
+                        { name: 'Nursing Care', totalSpending: { amount: 211.3 } },
+                        { name: 'Home Health', totalSpending: { amount: 147.8 } },
+                        { name: 'Dental', totalSpending: { amount: 173.8 } },
+                        { name: 'Gov Admin', totalSpending: { amount: 57.4 } },
+                        { name: 'Public Health', totalSpending: { amount: 160.2 } },
+                        { name: 'Insurance Cost', totalSpending: { amount: 302.9 } }
+                    ]
+                }
+            };
+        }
+
+        function transformToSankey(data) {
+            const nodes = [];
+            const links = [];
+            const colors = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#34495e','#e67e22','#95a5a6'];
+            
+            nodes.push({ label: 'Total<br>$4.9T', color: '#667eea' });
+            
+            data.root.children.forEach((cat, i) => {
+                const amt = cat.totalSpending.amount;
+                const pct = ((amt / 4900) * 100).toFixed(1);
+                nodes.push({ label: `${cat.name}<br>$${amt}B (${pct}%)`, color: colors[i] });
+                links.push({ source: 0, target: i + 1, value: amt, color: colors[i] + '66' });
+            });
+            
+            return { nodes, links };
+        }
+
+        async function createSankey() {
+            const data = await loadDataFromJSON();
+            const sankeyData = transformToSankey(data);
+            
+            Plotly.newPlot('sankey', [{
+                type: 'sankey',
+                orientation: 'h',
+                node: {
+                    pad: 20,
+                    thickness: 30,
+                    label: sankeyData.nodes.map(n => n.label),
+                    color: sankeyData.nodes.map(n => n.color)
+                },
+                link: {
+                    source: sankeyData.links.map(l => l.source),
+                    target: sankeyData.links.map(l => l.target),
+                    value: sankeyData.links.map(l => l.value),
+                    color: sankeyData.links.map(l => l.color)
+                }
+            }], {
+                title: 'Healthcare Spending Flow - Data from JSON',
+                font: { size: 14 },
+                height: 700
+            }, {
+                responsive: true
+            });
+        }
+        
+        // Initialize
+        createSankey();
+    </script>
+</body>
+</html>

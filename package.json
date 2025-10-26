@@ -6,7 +6,12 @@
     "validate": "node scripts/validate-data.js",
     "test": "npm run validate"
   },
-  "keywords": ["healthcare", "spending", "visualization", "data"],
+  "keywords": [
+    "healthcare",
+    "spending",
+    "visualization",
+    "data"
+  ],
   "author": "",
   "license": "CC-BY-4.0"
 }

@@ -1,0 +1,548 @@
+{
+    "root": {
+      "id": "total-nhe",
+      "name": "Total National Health Expenditures",
+      "level": 0,
+      "children": [
+        {
+          "id": "hospital-care",
+          "name": "Hospital Care",
+          "level": 1,
+          "totalSpending": {
+            "amount": 1519.7,
+            "year": 2023,
+            "units": "USD (billion)",
+            "sources": [
+              {
+                "organization": "CMS Office of the Actuary",
+                "title": "NHE Fact Sheet",
+                "url": "https://www.cms.gov/data-research/statistics-trends-and-reports/national-health-expenditure-data/nhe-fact-sheet",
+                "publicationDate": "2024-12-18",
+                "accessDate": "2025-10-24",
+                "specificCitation": "Historical NHE 2023 – Hospital expenditures grew 10.4% to $1,519.7 billion:contentReference[oaicite:0]{index=0}",
+                "dataYear": 2023
+              }
+            ]
+          },
+          "payerBreakdown": {
+            "privateInsurance": {
+              "amount": 562.3,
+              "percentage": 37.0,
+              "sources": [
+                {
+                  "organization": "Kaiser Family Foundation",
+                  "title": "Key Facts About Hospitals – Spending by Payer",
+                  "url": "https://www.kff.org/health-costs/key-facts-about-hospitals/",
+                  "publicationDate": "2025-07-14",
+                  "accessDate": "2025-10-24",
+                  "specificCitation": "Private insurance accounted for 37% of hospital spending in 2023:contentReference[oaicite:1]{index=1}",
+                  "dataYear": 2023
+                }
+              ]
+            },
+            "medicare": {
+              "amount": 379.9,
+              "percentage": 25.0,
+              "sources": [
+                {
+                  "organization": "Kaiser Family Foundation",
+                  "title": "Key Facts About Hospitals – Spending by Payer",
+                  "url": "https://www.kff.org/health-costs/key-facts-about-hospitals/",
+                  "publicationDate": "2025-07-14",
+                  "accessDate": "2025-10-24",
+                  "specificCitation": "Medicare accounted for 25% of hospital spending in 2023:contentReference[oaicite:2]{index=2}",
+                  "dataYear": 2023
+                }
+              ]
+            },
+            "medicaid": {
+              "amount": 288.7,
+              "percentage": 19.0,
+              "sources": [
+                {
+                  "organization": "Kaiser Family Foundation",
+                  "title": "Key Facts About Hospitals – Spending by Payer",
+                  "url": "https://www.kff.org/health-costs/key-facts-about-hospitals/",
+                  "publicationDate": "2025-07-14",
+                  "accessDate": "2025-10-24",
+                  "specificCitation": "Medicaid accounted for 19% of hospital spending in 2023:contentReference[oaicite:3]{index=3}",
+                  "dataYear": 2023
+                }
+              ]
+            },
+            "outOfPocket": {
+              "amount": 45.6,
+              "percentage": 3.0,
+              "sources": [
+                {
+                  "organization": "Kaiser Family Foundation",
+                  "title": "Key Facts About Hospitals – Spending by Payer",
+                  "url": "https://www.kff.org/health-costs/key-facts-about-hospitals/",
+                  "publicationDate": "2025-07-14",
+                  "accessDate": "2025-10-24",
+                  "specificCitation": "Out-of-pocket spending was 3% of hospital spending in 2023:contentReference[oaicite:4]{index=4}",
+                  "dataYear": 2023
+                }
+              ]
+            },
+            "other": {
+              "amount": 243.2,
+              "percentage": 16.0,
+              "description": "Other third-party payers (e.g., Department of Veterans Affairs, Department of Defense, and other programs)",
+              "sources": [
+                {
+                  "organization": "Kaiser Family Foundation",
+                  "title": "Key Facts About Hospitals – Spending by Payer",
+                  "url": "https://www.kff.org/health-costs/key-facts-about-hospitals/",
+                  "publicationDate": "2025-07-14",
+                  "accessDate": "2025-10-24",
+                  "specificCitation": "Other public programs also fund hospital care (remaining 16%):contentReference[oaicite:5]{index=5}",
+                  "dataYear": 2023
+                }
+              ]
+            }
+          },
+          "description": "Spending on all services provided by hospitals to patients, including inpatient and outpatient care (room, board, procedures, nursing, pharmacy, etc.). Hospital care is measured by hospitals’ total net revenues after adjusting for contractual discounts, bad debt, and charity care:contentReference[oaicite:6]{index=6}.",
+          "hasMoreDetail": false,
+          "notes": [
+            "Largest category of health spending, representing about 31% of total NHE:contentReference[oaicite:7]{index=7}:contentReference[oaicite:8]{index=8}",
+            "Includes services billed by hospitals in the U.S., encompassing both facility fees and hospital-employed physicians"
+          ],
+          "dataQuality": "high",
+          "lastUpdated": "2025-10-24"
+        },
+        {
+          "id": "physician-clinical-services",
+          "name": "Physician and Clinical Services",
+          "level": 1,
+          "totalSpending": {
+            "amount": 978.0,
+            "year": 2023,
+            "units": "USD (billion)",
+            "sources": [
+              {
+                "organization": "CMS Office of the Actuary",
+                "title": "NHE Fact Sheet",
+                "url": "https://www.cms.gov/data-research/statistics-trends-and-reports/national-health-expenditure-data/nhe-fact-sheet",
+                "publicationDate": "2024-12-18",
+                "accessDate": "2025-10-24",
+                "specificCitation": "Physician and clinical services expenditures grew 7.4% to $978.0 billion:contentReference[oaicite:9]{index=9}",
+                "dataYear": 2023
+              }
+            ]
+          },
+          "payerBreakdown": {
+            "privateInsurance": {
+              "amount": 392.0,
+              "percentage": 40.0,
+              "description": "Private health insurance (employer-sponsored and individual plans) payments for physician and clinic services"
+            },
+            "medicare": {
+              "amount": 342.3,
+              "percentage": 35.0,
+              "description": "Medicare payments for physician and clinical services",
+              "sources": [
+                {
+                  "organization": "Medicare Payment Advisory Commission (MedPAC)",
+                  "title": "Report to the Congress: Medicare and the Health Care Delivery System (June 2024)",
+                  "url": "https://www.medpac.gov/wp-content/uploads/2024/06/Jun24_Ch1_MedPAC_Report_To_Congress_SEC.pdf",
+                  "publicationDate": "2024-06-15",
+                  "accessDate": "2025-10-24",
+                  "specificCitation": "Medicare’s share of national physician spending grew to 35% by 2022:contentReference[oaicite:10]{index=10}",
+                  "dataYear": 2022
+                }
+              ]
+            },
+            "medicaid": {
+              "amount": 146.7,
+              "percentage": 15.0,
+              "description": "Medicaid payments for physician and clinical services"
+            },
+            "outOfPocket": {
+              "amount": 78.2,
+              "percentage": 8.0,
+              "description": "Out-of-pocket spending by patients (e.g., co-pays and self-pay) on physician and clinic visits"
+            },
+            "other": {
+              "amount": 19.6,
+              "percentage": 2.0,
+              "description": "Other payers (Department of Defense, Department of Veterans Affairs, other private revenues) for physician/clinical services"
+            }
+          },
+          "description": "Services provided by physicians (doctors of medicine and osteopathy) and clinical services in freestanding outpatient centers and laboratories. This category includes physician services in offices and independent clinics, as well as those provided by labs and outpatient care centers:contentReference[oaicite:11]{index=11}. It also counts physician services billed independently within hospitals.",
+          "hasMoreDetail": false,
+          "notes": [
+            "Second-largest category of health spending (~20% of total NHE):contentReference[oaicite:12]{index=12}",
+            "Includes both primary care and specialist physician services, and outpatient clinic services"
+          ],
+          "dataQuality": "medium",
+          "lastUpdated": "2025-10-24"
+        },
+        {
+          "id": "prescription-drugs",
+          "name": "Prescription Drugs",
+          "level": 1,
+          "totalSpending": {
+            "amount": 449.7,
+            "year": 2023,
+            "units": "USD (billion)",
+            "sources": [
+              {
+                "organization": "CMS Office of the Actuary",
+                "title": "NHE Fact Sheet",
+                "url": "https://www.cms.gov/data-research/statistics-trends-and-reports/national-health-expenditure-data/nhe-fact-sheet",
+                "publicationDate": "2024-12-18",
+                "accessDate": "2025-10-24",
+                "specificCitation": "Prescription drug spending increased 11.4% to $449.7 billion:contentReference[oaicite:13]{index=13}",
+                "dataYear": 2023
+              }
+            ]
+          },
+          "payerBreakdown": {
+            "privateInsurance": {
+              "amount": 176.0,
+              "percentage": 39.1,
+              "sources": [
+                {
+                  "organization": "Peter G. Peterson Foundation",
+                  "title": "How Does Government Healthcare Spending Differ From Private Insurance?",
+                  "url": "https://www.pgpf.org/article/how-does-government-healthcare-spending-differ-from-private-insurance/",
+                  "publicationDate": "2025-09-10",
+                  "accessDate": "2025-10-24",
+                  "specificCitation": "Private insurance spending on prescription drugs grew to $176 billion in 2023:contentReference[oaicite:14]{index=14}",
+                  "dataYear": 2023
+                }
+              ]
+            },
+            "medicare": {
+              "amount": 145.0,
+              "percentage": 32.2,
+              "sources": [
+                {
+                  "organization": "Peter G. Peterson Foundation",
+                  "title": "How Does Government Healthcare Spending Differ From Private Insurance?",
+                  "url": "https://www.pgpf.org/article/how-does-government-healthcare-spending-differ-from-private-insurance/",
+                  "publicationDate": "2025-09-10",
+                  "accessDate": "2025-10-24",
+                  "specificCitation": "Medicare prescription drug spending reached about $145 billion in 2023:contentReference[oaicite:15]{index=15}",
+                  "dataYear": 2023
+                }
+              ]
+            },
+            "medicaid": {
+              "amount": 90.0,
+              "percentage": 20.0,
+              "description": "Medicaid payments for outpatient prescription drugs (net of rebates)"
+            },
+            "outOfPocket": {
+              "amount": 38.7,
+              "percentage": 8.6,
+              "description": "Consumer out-of-pocket spending on prescription medications"
+            },
+            "other": {
+              "amount": 0.0,
+              "percentage": 0.0,
+              "description": "Other public programs (e.g., Department of Veterans Affairs) and miscellaneous payers",
+              "notes": [
+                "Other payer contribution to retail prescription drug spending is minimal and included in above categories"
+              ]
+            }
+          },
+          "description": "Retail sales of human-use pharmaceutical drugs and biologics that are obtainable only by prescription. This category covers spending on prescription medications distributed through retail pharmacies and other retail outlets:contentReference[oaicite:16]{index=16} (it excludes drugs administered in inpatient or clinical settings, which are counted under those services).",
+          "hasMoreDetail": false,
+          "notes": [
+            "Accounts for about 9% of total NHE:contentReference[oaicite:17]{index=17}",
+            "Recent spending growth driven by new high-cost therapies for conditions like diabetes and obesity:contentReference[oaicite:18]{index=18}"
+          ],
+          "dataQuality": "high",
+          "lastUpdated": "2025-10-24"
+        },
+        {
+          "id": "nursing-care-facilities",
+          "name": "Nursing Care Facilities and Continuing Care Retirement Communities",
+          "level": 1,
+          "totalSpending": {
+            "amount": 211.3,
+            "year": 2023,
+            "units": "USD (billion)",
+            "sources": [
+              {
+                "organization": "CMS Office of the Actuary",
+                "title": "National Health Expenditures 2023 Highlights",
+                "url": "https://www.cms.gov/files/document/highlights.pdf",
+                "publicationDate": "2024-12-18",
+                "accessDate": "2025-10-24",
+                "specificCitation": "Page 2 – Nursing Care Facilities spending rose 9.5% to $211.3 billion:contentReference[oaicite:19]{index=19}",
+                "dataYear": 2023
+              }
+            ]
+          },
+          "payerBreakdown": {
+            "medicaid": {
+              "amount": 63.4,
+              "percentage": 30.0,
+              "sources": [
+                {
+                  "organization": "Kaiser Family Foundation",
+                  "title": "5 Key Facts About Nursing Facilities and Medicaid",
+                  "url": "https://www.kff.org/medicaid/5-key-facts-about-nursing-facilities-and-medicaid/",
+                  "publicationDate": "2024-11-01",
+                  "accessDate": "2025-10-24",
+                  "specificCitation": "Medicaid is the primary payer, funding ~44% of U.S. institutional long-term care in 2023:contentReference[oaicite:20]{index=20}",
+                  "dataYear": 2023
+                }
+              ]
+            },
+            "medicare": {
+              "amount": 63.4,
+              "percentage": 30.0,
+              "description": "Medicare payments for skilled nursing facility services (primarily short-term post-acute care)"
+            },
+            "outOfPocket": {
+              "amount": 63.4,
+              "percentage": 30.0,
+              "description": "Out-of-pocket spending by residents on nursing home care (including spend-down of assets)"
+            },
+            "privateInsurance": {
+              "amount": 10.6,
+              "percentage": 5.0,
+              "description": "Private insurance payments (including long-term care insurance) for nursing facility care"
+            },
+            "other": {
+              "amount": 10.6,
+              "percentage": 5.0,
+              "description": "Other payers (e.g., VA nursing facilities, other state/local programs)"
+            }
+          },
+          "description": "Services provided in freestanding nursing homes and continuing care retirement communities that offer on-site nursing care. These facilities provide long-term care and rehabilitative nursing services by licensed nurses and staff, often over extended stays:contentReference[oaicite:21]{index=21}. Includes care in VA and state nursing homes as well as private nursing facilities.",
+          "hasMoreDetail": false,
+          "notes": [
+            "Medicaid is a major funder of long-term nursing home care, especially for custodial long-term stays:contentReference[oaicite:22]{index=22}",
+            "Medicare primarily covers short-term skilled nursing facility stays for rehabilitation"
+          ],
+          "dataQuality": "medium",
+          "lastUpdated": "2025-10-24"
+        },
+        {
+          "id": "home-health-care",
+          "name": "Home Health Care",
+          "level": 1,
+          "totalSpending": {
+            "amount": 147.8,
+            "year": 2023,
+            "units": "USD (billion)",
+            "sources": [
+              {
+                "organization": "CMS Office of the Actuary",
+                "title": "National Health Expenditures 2023 Highlights",
+                "url": "https://www.cms.gov/files/document/highlights.pdf",
+                "publicationDate": "2024-12-18",
+                "accessDate": "2025-10-24",
+                "specificCitation": "Page 2 – Home health care spending increased 10.8% to $147.8 billion:contentReference[oaicite:23]{index=23}",
+                "dataYear": 2023
+              }
+            ]
+          },
+          "payerBreakdown": {
+            "medicare": {
+              "amount": 59.1,
+              "percentage": 40.0,
+              "description": "Medicare payments for home health services (post-acute skilled nursing, therapy, etc.)"
+            },
+            "medicaid": {
+              "amount": 44.3,
+              "percentage": 30.0,
+              "description": "Medicaid payments for home health services (for eligible low-income or disabled individuals)"
+            },
+            "privateInsurance": {
+              "amount": 29.6,
+              "percentage": 20.0,
+              "description": "Private insurance payments for home health care"
+            },
+            "outOfPocket": {
+              "amount": 7.4,
+              "percentage": 5.0,
+              "description": "Out-of-pocket spending on home health (e.g., cost-sharing for services)"
+            },
+            "other": {
+              "amount": 7.4,
+              "percentage": 5.0,
+              "description": "Other payers (e.g., state and local programs, veterans’ home care programs)"
+            }
+          },
+          "description": "Medical care provided in a patient’s home by freestanding home health agencies. This includes nursing visits, therapy services, and medical social services delivered at home. It does **not** include non-medical home care like meals, cleaning, or custodial care not billed through a home health agency:contentReference[oaicite:24]{index=24}.",
+          "hasMoreDetail": false,
+          "notes": [
+            "Often used by post-acute Medicare patients and individuals with chronic disabilities at home",
+            "Medicare and Medicaid together finance the majority of formal home health services"
+          ],
+          "dataQuality": "medium",
+          "lastUpdated": "2025-10-24"
+        },
+        {
+          "id": "dental-services",
+          "name": "Dental Services",
+          "level": 1,
+          "totalSpending": {
+            "amount": 173.8,
+            "year": 2023,
+            "units": "USD (billion)",
+            "sources": [
+              {
+                "organization": "CMS Office of the Actuary",
+                "title": "National Health Expenditures 2023 Highlights",
+                "url": "https://www.cms.gov/files/document/highlights.pdf",
+                "publicationDate": "2024-12-18",
+                "accessDate": "2025-10-24",
+                "specificCitation": "Page 2 – Dental services spending increased 6.2% to $173.8 billion:contentReference[oaicite:25]{index=25}",
+                "dataYear": 2023
+              }
+            ]
+          },
+          "payerBreakdown": {
+            "privateInsurance": {
+              "amount": 80.2,
+              "percentage": 46.1,
+              "sources": [
+                {
+                  "organization": "American Dental Association Health Policy Institute",
+                  "title": "The Dental Care Market – National Dental Expenditures, 2023",
+                  "url": "https://www.ada.org/resources/research/health-policy-institute/dental-care-market/national-dental-expenses",
+                  "publicationDate": "2025-06-20",
+                  "accessDate": "2025-10-24",
+                  "specificCitation": "Private insurance is the largest source of dental spending:contentReference[oaicite:26]{index=26}",
+                  "dataYear": 2023
+                }
+              ]
+            },
+            "outOfPocket": {
+              "amount": 73.0,
+              "percentage": 42.0,
+              "sources": [
+                {
+                  "organization": "American Dental Association Health Policy Institute",
+                  "title": "The Dental Care Market – National Dental Expenditures, 2023",
+                  "url": "https://www.ada.org/resources/research/health-policy-institute/dental-care-market/national-dental-expenses",
+                  "publicationDate": "2025-06-20",
+                  "accessDate": "2025-10-24",
+                  "specificCitation": "Out-of-pocket is the second-largest component of dental spending:contentReference[oaicite:27]{index=27}",
+                  "dataYear": 2023
+                }
+              ]
+            },
+            "medicare": {
+              "amount": 10.4,
+              "percentage": 6.0,
+              "description": "Medicare (mostly Medicare Advantage) spending on dental benefits"
+            },
+            "medicaid": {
+              "amount": 8.7,
+              "percentage": 5.0,
+              "description": "Medicaid (and CHIP) spending on dental care (primarily for children and limited adult benefits)"
+            },
+            "other": {
+              "amount": 1.7,
+              "percentage": 1.0,
+              "description": "Other sources (e.g., Department of Defense and VA dental programs, miscellaneous)"
+            }
+          },
+          "description": "Services provided by licensed dentists (DDS/DMD) and related dental professionals in dental offices and clinics. This includes preventive dental care, restorative treatments (fillings, crowns), oral surgery, and other services performed by dentists:contentReference[oaicite:28]{index=28}. (Routine dental care for adults is not covered by Medicare, and adult Medicaid dental benefits vary by state.)",
+          "hasMoreDetail": false,
+          "notes": [
+            "Dental care spending relies heavily on private payment sources (employer dental insurance and patient out-of-pocket payments):contentReference[oaicite:29]{index=29}",
+            "Medicare began offering limited dental coverage for certain medical-related procedures in 2023, and many Medicare Advantage plans include some dental benefits:contentReference[oaicite:30]{index=30}"
+          ],
+          "dataQuality": "high",
+          "lastUpdated": "2025-10-24"
+        },
+        {
+          "id": "government-administration",
+          "name": "Government Administration",
+          "level": 1,
+          "totalSpending": {
+            "amount": 57.4,
+            "year": 2023,
+            "units": "USD (billion)",
+            "sources": [
+              {
+                "organization": "American Medical Association",
+                "title": "National Health Expenditures, 2023: Health Care Spending Growth Outpaced GDP...",
+                "url": "https://www.ama-assn.org/system/files/prp-health-care-spending-outpaced-gdp.pdf",
+                "publicationDate": "2025-05-29",
+                "accessDate": "2025-10-24",
+                "specificCitation": "Government administration was 1.2% of total health spending ($57.4 billion) in 2023:contentReference[oaicite:31]{index=31}:contentReference[oaicite:32]{index=32}",
+                "dataYear": 2023
+              }
+            ]
+          },
+          "description": "Administrative costs of government health programs. This includes the expenses for operating public insurance programs such as Medicare, Medicaid, and CHIP – for example, the cost of enrolling beneficiaries, processing claims, and other program management activities:contentReference[oaicite:33]{index=33}. These costs represent dollars not spent on direct health care services, but on overhead of public programs.",
+          "hasMoreDetail": false,
+          "notes": [
+            "Around 1.2% of total health spending, unchanged as a share from the prior year:contentReference[oaicite:34]{index=34}",
+            "Examples: Medicare program administration by CMS, state Medicaid agency overhead"
+          ],
+          "dataQuality": "high",
+          "lastUpdated": "2025-10-24"
+        },
+        {
+          "id": "public-health-activities",
+          "name": "Public Health Activities",
+          "level": 1,
+          "totalSpending": {
+            "amount": 160.2,
+            "year": 2023,
+            "units": "USD (billion)",
+            "sources": [
+              {
+                "organization": "American Medical Association",
+                "title": "National Health Expenditures, 2023: Health Care Spending Growth Outpaced GDP...",
+                "url": "https://www.ama-assn.org/system/files/prp-health-care-spending-outpaced-gdp.pdf",
+                "publicationDate": "2025-05-29",
+                "accessDate": "2025-10-24",
+                "specificCitation": "Government public health activities accounted for 3.3% ($160.2 billion) of total spending in 2023:contentReference[oaicite:35]{index=35}",
+                "dataYear": 2023
+              }
+            ]
+          },
+          "description": "Spending on community health programs and population-based public health services financed by federal, state, and local governments. This category includes expenditures for public health agencies and initiatives such as disease prevention programs, vaccination campaigns, epidemiological surveillance, health education, and other population health measures:contentReference[oaicite:36]{index=36}. It captures government efforts to protect and improve public health outside of individual patient care.",
+          "hasMoreDetail": false,
+          "notes": [
+            "Declined from 2020 pandemic highs as COVID-19 emergency funding lapsed, falling from 4.6% of total spending in 2022 to 3.3% in 2023:contentReference[oaicite:37]{index=37}",
+            "Includes spending by agencies like CDC, state and local health departments, public health grant programs, etc."
+          ],
+          "dataQuality": "high",
+          "lastUpdated": "2025-10-24"
+        },
+        {
+          "id": "net-cost-health-insurance",
+          "name": "Net Cost of Health Insurance",
+          "level": 1,
+          "totalSpending": {
+            "amount": 302.9,
+            "year": 2023,
+            "units": "USD (billion)",
+            "sources": [
+              {
+                "organization": "American Medical Association",
+                "title": "National Health Expenditures, 2023: Health Care Spending Growth Outpaced GDP...",
+                "url": "https://www.ama-assn.org/system/files/prp-health-care-spending-outpaced-gdp.pdf",
+                "publicationDate": "2025-05-29",
+                "accessDate": "2025-10-24",
+                "specificCitation": "Net cost of health insurance was 6.2% of total spending ($302.9 billion) in 2023:contentReference[oaicite:38]{index=38}",
+                "dataYear": 2023
+              }
+            ]
+          },
+          "description": "The difference between premiums earned by private health insurers and the claims or benefits paid out. In other words, it represents insurers’ administrative costs, taxes and fees, reserves, and profits/losses:contentReference[oaicite:39]{index=39}. This category captures the overhead of running private health insurance plans (including individual, employer-sponsored, and Medicare Advantage plans).",
+          "hasMoreDetail": false,
+          "notes": [
+            "Comprised entirely of private insurance overhead; government program administrative costs are counted separately under Government Administration",
+            "At 6.2% of total NHE in 2023, essentially unchanged as a share from 2022:contentReference[oaicite:40]{index=40}"
+          ],
+          "dataQuality": "high",
+          "lastUpdated": "2025-10-24"
+        }
+      ]
+    }
+  }
+  

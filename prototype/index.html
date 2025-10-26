@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U.S. Healthcare Spending - Interactive Sankey</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px 40px;
+            background: #f8f9fa;
+        }
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+        }
+        .stat-label {
+            font-size: 0.9em;
+            color: #6c757d;
+            text-transform: uppercase;
+        }
+        .info {
+            padding: 20px 40px;
+            background: #fff3cd;
+        }
+        .info h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        .info p {
+            line-height: 1.5;
+        }
+        .info strong {
+            color: #444;
+        }
+        .status-message {
+            padding: 20px 40px;
+            font-size: 1em;
+        }
+        .status-message.loading {
+            color: #4338ca;
+            background: #eef2ff;
+        }
+        .status-message.error {
+            color: #c53030;
+            background: #fff5f5;
+            border-left: 4px solid #c53030;
+        }
+        .status-message.hidden {
+            display: none;
+        }
+        .layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            padding: 0 40px 40px;
+        }
+        .chart-wrapper {
+            flex: 2 1 600px;
+            min-width: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: inset 0 0 0 1px rgba(102, 126, 234, 0.1);
+            padding: 24px;
+        }
+        #sankey {
+            min-height: 760px;
+        }
+        .detail-panel {
+            flex: 1 1 280px;
+            padding: 24px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.25);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-height: 760px;
+            overflow-y: auto;
+        }
+        .detail-panel h3 {
+            font-size: 1.1em;
+            color: #1e293b;
+        }
+        .detail-panel h4 {
+            font-size: 0.95em;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .detail-panel .placeholder {
+            color: #52617a;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        .detail-panel .meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+        }
+        .detail-panel .meta-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.15);
+        }
+        .detail-panel .meta-item strong {
+            display: block;
+            font-size: 0.75em;
+            color: #64748b;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+        .detail-panel .meta-item span {
+            font-size: 0.9em;
+            color: #1e293b;
+            font-weight: 600;
+        }
+        .detail-panel ul {
+            list-style: disc;
+            padding-left: 18px;
+            color: #334155;
+        }
+        .detail-panel li {
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+        .detail-panel a {
+            color: #4338ca;
+            text-decoration: none;
+        }
+        .detail-panel a:hover {
+            text-decoration: underline;
+        }
+        .tooltip {
+            position: fixed;
+            background: rgba(15, 23, 42, 0.92);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            pointer-events: none;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.3);
+            max-width: 320px;
+            font-size: 0.85em;
+            line-height: 1.4;
+            z-index: 999;
+        }
+        .tooltip.hidden {
+            display: none;
+        }
+        @media (max-width: 1024px) {
+            .layout {
+                flex-direction: column;
+            }
+            .chart-wrapper {
+                min-height: 600px;
+            }
+            #sankey {
+                min-height: 620px;
+            }
+            .detail-panel {
+                max-height: none;
+            }
+        }
+        @media (max-width: 640px) {
+            body {
+                padding: 12px;
+            }
+            .header {
+                padding: 28px 20px;
+            }
+            .stats {
+                padding: 20px;
+            }
+            .info {
+                padding: 20px;
+            }
+            .layout {
+                padding: 0 20px 24px;
+            }
+            .chart-wrapper {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 U.S. Healthcare Spending 2023</h1>
+            <p>Interactive Flow Visualization</p>
+        </div>
+        <div class="stats">
+            <div class="stat-card">
+                <div id="total-spending" class="stat-value">--</div>
+                <div class="stat-label">Total Spending</div>
+            </div>
+            <div class="stat-card">
+                <div id="category-count" class="stat-value">--</div>
+                <div class="stat-label">Major Categories</div>
+            </div>
+            <div class="stat-card">
+                <div id="payer-count" class="stat-value">--</div>
+                <div class="stat-label">Payer Views</div>
+            </div>
+            <div class="stat-card">
+                <div id="latest-year" class="stat-value">--</div>
+                <div class="stat-label">Latest Data Year</div>
+            </div>
+        </div>
+        <div class="info">
+            <h3>📊 How to Use</h3>
+            <p>
+                <strong>Hover</strong> over nodes or flows to preview definitions and amounts.<br>
+                <strong>Click</strong> categories marked with ▸ to expand payer detail (click again to collapse).<br>
+                <strong>Click</strong> any node or flow to pin full definitions, notes, and sources in the panel.<br>
+                Data loads directly from <code>data/healthcare_spends_research.json</code> so the visualization always reflects the latest research.
+            </p>
+        </div>
+        <div id="status-message" class="status-message loading">
+            Loading data from <code>healthcare_spends_research.json</code>…
+        </div>
+        <div class="layout">
+            <div class="chart-wrapper">
+                <div id="sankey"></div>
+            </div>
+            <aside id="detail-panel" class="detail-panel">
+                <h3>📖 Detail Explorer</h3>
+                <p class="placeholder">
+                    Click a spending category or a payer slice to surface the full definition, methodology notes, and original data sources here.
+                </p>
+            </aside>
+        </div>
+    </div>
+    <div id="hover-tooltip" class="tooltip hidden"></div>
+    <script>
+        (function () {
+            const palette = ['#2563eb', '#db2777', '#0891b2', '#9333ea', '#f97316', '#14b8a6', '#c026d3', '#0f766e', '#d97706', '#7c3aed'];
+            const rootColor = '#4338ca';
+            const hoverTooltip = document.getElementById('hover-tooltip');
+            const statusMessage = document.getElementById('status-message');
+            const detailPanel = document.getElementById('detail-panel');
+            const stats = {
+                total: document.getElementById('total-spending'),
+                categories: document.getElementById('category-count'),
+                payers: document.getElementById('payer-count'),
+                latestYear: document.getElementById('latest-year')
+            };
+
+            const state = {
+                rawData: null,
+                sankey: null,
+                expanded: new Set(),
+                hasRendered: false,
+                listenersAttached: false,
+                selectedMetaKey: null
+            };
+
+            init();
+
+            async function init() {
+                try {
+                    const dataset = await loadData();
+                    state.rawData = dataset;
+                    hideStatus();
+                    refreshSankey();
+                } catch (error) {
+                    console.error('Unable to load JSON data', error);
+                    showError(error);
+                    const fallbackData = getFallbackData();
+                    state.rawData = fallbackData;
+                    refreshSankey();
+                }
+            }
+
+            function refreshSankey() {
+                if (!state.rawData) {
+                    return;
+                }
+                state.sankey = transformToSankey(state.rawData, state.expanded);
+                updateStats(state.sankey, stats);
+                drawSankey(state.sankey);
+                renderDetailByKey(state.selectedMetaKey);
+            }
+
+            function drawSankey(sankeyData) {
+                const trace = {
+                    type: 'sankey',
+                    orientation: 'v',
+                    arrangement: 'snap',
+                    valueformat: '.0f',
+                    valuesuffix: ' B',
+                    node: {
+                        pad: 18,
+                        thickness: 28,
+                        label: sankeyData.nodeLabels,
+                        color: sankeyData.nodeColors,
+                        hovertemplate: sankeyData.nodeHoverTemplates,
+                        customdata: sankeyData.nodeCustomData
+                    },
+                    link: {
+                        source: sankeyData.linkSources,
+                        target: sankeyData.linkTargets,
+                        value: sankeyData.linkValues,
+                        color: sankeyData.linkColors,
+                        hovertemplate: sankeyData.linkHoverTemplates,
+                        customdata: sankeyData.linkCustomData
+                    }
+                };
+
+                const layout = {
+                    title: {
+                        text: 'U.S. Healthcare Spending Flow by Category and Payer (billions)',
+                        font: { size: 20, color: '#1f2937' }
+                    },
+                    height: 820,
+                    margin: { l: 30, r: 30, t: 60, b: 30 },
+                    font: { size: 13, color: '#1f2937' },
+                    paper_bgcolor: '#ffffff',
+                    plot_bgcolor: '#ffffff'
+                };
+
+                const config = {
+                    responsive: true,
+                    displaylogo: false
+                };
+
+                if (state.hasRendered) {
+                    Plotly.react('sankey', [trace], layout, config);
+                } else {
+                    Plotly.newPlot('sankey', [trace], layout, config);
+                    state.hasRendered = true;
+                    if (!state.listenersAttached) {
+                        setupInteractions();
+                        state.listenersAttached = true;
+                    }
+                }
+            }
+
+            async function loadData() {
+                const candidates = resolveDataPaths();
+                let lastError = null;
+
+                for (const path of candidates) {
+                    try {
+                        const response = await fetch(path);
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status} while fetching ${path}`);
+                        }
+                        return await response.json();
+                    } catch (error) {
+                        lastError = error;
+                        console.warn(`Attempt to load ${path} failed`, error);
+                    }
+                }
+
+                if (window.location.protocol === 'file:') {
+                    throw new Error('This prototype must be loaded via http(s) to access external JSON (file:// disallows fetch).');
+                }
+
+                if (lastError) {
+                    throw lastError;
+                }
+
+                throw new Error('Unable to locate healthcare_spends_research.json.');
+            }
+
+            function resolveDataPaths() {
+                const rootRelative = '/data/healthcare_spends_research.json';
+                const sameFolder = './data/healthcare_spends_research.json';
+                const parentFolder = '../data/healthcare_spends_research.json';
+
+                const results = [];
+                const origin = window.location.origin;
+                const pathname = window.location.pathname;
+
+                const addPath = path => {
+                    if (path && !results.includes(path)) {
+                        results.push(path);
+                    }
+                };
+
+                addPath(parentFolder);
+                addPath(rootRelative);
+                addPath(sameFolder);
+
+                if (origin && origin !== 'null') {
+                    addPath(new URL(rootRelative, origin).toString());
+                    addPath(new URL(parentFolder, window.location.href).toString());
+                }
+
+                if (pathname.includes('/prototype/')) {
+                    addPath(pathname.replace(/\/prototype\/.*$/, '/data/healthcare_spends_research.json'));
+                }
+
+                return results;
+            }
+
+            function transformToSankey(data, expandedSet) {
+                const root = data.root;
+                const totalSpending = root.children.reduce((sum, category) => {
+                    const amount = Number(category?.totalSpending?.amount) || 0;
+                    return sum + amount;
+                }, 0);
+
+                const nodeLabels = [];
+                const nodeColors = [];
+                const nodeHoverTemplates = [];
+                const nodeMeta = [];
+                const nodeIndex = new Map();
+                const nodeCustomData = [];
+
+                const linkSources = [];
+                const linkTargets = [];
+                const linkValues = [];
+                const linkColors = [];
+                const linkHoverTemplates = [];
+                const linkMeta = [];
+                const linkCustomData = [];
+                const metaByKey = new Map();
+
+                const totalPayerCount = root.children.reduce((count, category) => {
+                    const payerBreakdown = category.payerBreakdown || {};
+                    return count + Object.values(payerBreakdown).filter(p => p && typeof p.amount === 'number').length;
+                }, 0);
+
+                let visiblePayerCount = 0;
+
+                const rootMeta = {
+                    id: root.id || 'total',
+                    type: 'root',
+                    name: root.name || 'Total Healthcare Spending',
+                    parentName: null,
+                    amount: totalSpending,
+                    percentage: 100,
+                    units: 'USD (billion)',
+                        description: cleanText(root.description) || 'Aggregate national health expenditure total from the research data file.',
+                        notes: [],
+                        sources: flattenSources(root.children.map(c => c.totalSpending?.sources || [])),
+                        metaKey: `node:${root.id || 'total'}`
+                    };
+
+                const rootIndex = addNode(rootMeta.id, {
+                    label: `${rootMeta.name}<br>${formatBillions(totalSpending)}<br>100%`,
+                    color: rootColor,
+                    hover: createHoverTemplate(rootMeta),
+                    meta: rootMeta
+                });
+
+                root.children.forEach((category, idx) => {
+                    const categoryId = category.id || slugify(category.name);
+                    const categoryTotal = Number(category?.totalSpending?.amount) || 0;
+                    const categoryColor = palette[idx % palette.length];
+                    const payerEntries = Object.entries(category.payerBreakdown || {}).filter(([, payer]) => payer && typeof payer.amount === 'number');
+                    const hasBreakdown = payerEntries.length > 0;
+                    const isExpanded = hasBreakdown && expandedSet.has(categoryId);
+
+                    const toggleSymbol = hasBreakdown ? (isExpanded ? '▾ ' : '▸ ') : '';
+                    const percentage = totalSpending > 0 ? (categoryTotal / totalSpending) * 100 : null;
+
+                    const categoryMeta = {
+                        id: categoryId,
+                        type: 'category',
+                        name: category.name,
+                        parentName: rootMeta.name,
+                        amount: categoryTotal,
+                        percentage,
+                        units: category.totalSpending?.units || 'USD (billion)',
+                        description: cleanText(category.description),
+                        notes: (category.notes || []).map(cleanText).filter(Boolean),
+                        sources: category.totalSpending?.sources || [],
+                        lastUpdated: category.lastUpdated || null,
+                        hasPayerBreakdown: hasBreakdown,
+                        expanded: isExpanded,
+                        payerPreview: payerEntries.map(([payerKey, payer]) => ({
+                            id: payerKey,
+                            name: formatPayerName(payerKey),
+                            amount: payer.amount,
+                            percentage: typeof payer.percentage === 'number' ? payer.percentage : null
+                        })),
+                        metaKey: `node:${categoryId}`
+                    };
+
+                    const categoryIndex = addNode(categoryId, {
+                        label: `${toggleSymbol}${category.name}<br>${formatBillions(categoryTotal)}${percentage !== null ? `<br>${percentage.toFixed(1)}%` : ''}`,
+                        color: categoryColor,
+                        hover: createHoverTemplate(categoryMeta),
+                        meta: categoryMeta
+                    });
+
+                    addLink(rootIndex, categoryIndex, categoryTotal, {
+                        color: withAlpha(categoryColor, 0.55),
+                        hover: createLinkHoverTemplate({
+                            from: rootMeta.name,
+                            to: category.name,
+                            amount: categoryTotal,
+                            percentage
+                        }),
+                        meta: {
+                            type: 'root-to-category',
+                            name: `${rootMeta.name} → ${category.name}`,
+                            from: rootMeta.name,
+                            to: category.name,
+                            fromId: rootMeta.id || 'total',
+                            toId: categoryId,
+                            amount: categoryTotal,
+                            percentage,
+                            sources: category.totalSpending?.sources || [],
+                            description: `Allocation from ${rootMeta.name} into ${category.name}.`,
+                            parentName: rootMeta.name,
+                            notes: [],
+                            metaKey: `link:${rootMeta.id || 'total'}:${categoryId}`
+                        }
+                    });
+
+                    if (!hasBreakdown || !isExpanded) {
+                        return;
+                    }
+
+                    payerEntries.forEach(([payerKey, payer]) => {
+                        const payerName = formatPayerName(payerKey);
+                        const payerId = `${categoryId}-${payerKey}`;
+                        const payerMeta = {
+                            id: payerId,
+                            type: 'payer',
+                            name: `${payerName} – ${category.name}`,
+                            shortName: payerName,
+                            parentName: category.name,
+                            amount: payer.amount,
+                            percentage: typeof payer.percentage === 'number' ? payer.percentage : null,
+                            units: category.totalSpending?.units || 'USD (billion)',
+                            description: cleanText(payer.description) || `Share of ${category.name} financed by ${payerName}.`,
+                            notes: [],
+                            sources: payer.sources || category.totalSpending?.sources || [],
+                            hasPayerBreakdown: false,
+                            expanded: false,
+                            metaKey: `node:${categoryId}-${payerKey}`
+                        };
+
+                        const payerIndex = addNode(payerMeta.id, {
+                            label: `${payerName}<br>${formatBillions(payer.amount)}${payerMeta.percentage !== null ? `<br>${payerMeta.percentage.toFixed(1)}%` : ''}`,
+                            color: withAlpha(categoryColor, 0.35),
+                            hover: createHoverTemplate(payerMeta),
+                            meta: payerMeta
+                        });
+
+                        addLink(categoryIndex, payerIndex, payer.amount, {
+                            color: withAlpha(categoryColor, 0.35),
+                            hover: createLinkHoverTemplate({
+                                from: category.name,
+                                to: payerName,
+                                amount: payer.amount,
+                                percentage: payerMeta.percentage
+                            }),
+                            meta: {
+                                type: 'category-to-payer',
+                                name: `${category.name} → ${payerName}`,
+                                from: category.name,
+                                to: payerName,
+                                fromId: categoryId,
+                                toId: payerId,
+                                amount: payer.amount,
+                                percentage: payerMeta.percentage,
+                                sources: payer.sources || category.totalSpending?.sources || [],
+                                description: payerMeta.description,
+                                parentName: category.name,
+                                notes: [],
+                                metaKey: `link:${categoryId}:${payerKey}`
+                            }
+                        });
+
+                        visiblePayerCount += 1;
+                    });
+                });
+
+                return {
+                    nodeLabels,
+                    nodeColors,
+                    nodeHoverTemplates,
+                    nodeMeta,
+                    nodeCustomData,
+                    linkSources,
+                    linkTargets,
+                    linkValues,
+                    linkColors,
+                    linkHoverTemplates,
+                    linkMeta,
+                    linkCustomData,
+                    totalSpending,
+                    categoryCount: root.children.length,
+                    visiblePayerCount,
+                    totalPayerCount,
+                    latestYear: getLatestYear(root.children),
+                    metaByKey
+                };
+
+                function addNode(id, config) {
+                    if (nodeIndex.has(id)) {
+                        return nodeIndex.get(id);
+                    }
+                    const nextIndex = nodeLabels.length;
+                    nodeIndex.set(id, nextIndex);
+                    nodeLabels.push(config.label);
+                    nodeColors.push(config.color);
+                    nodeHoverTemplates.push(config.hover);
+                    const meta = { ...config.meta };
+                    nodeMeta.push(meta);
+                    nodeCustomData.push(meta.metaKey);
+                    metaByKey.set(meta.metaKey, meta);
+                    return nextIndex;
+                }
+
+                function addLink(source, target, value, config) {
+                    linkSources.push(source);
+                    linkTargets.push(target);
+                    linkValues.push(value);
+                    linkColors.push(config.color);
+                    linkHoverTemplates.push(config.hover);
+                    const meta = { ...config.meta };
+                    linkMeta.push(meta);
+                    linkCustomData.push(meta.metaKey);
+                    metaByKey.set(meta.metaKey, meta);
+                }
+            }
+
+            function updateStats(sankeyData, statsElements) {
+                if (!statsElements) {
+                    return;
+                }
+                const total = sankeyData.totalSpending;
+                statsElements.total.textContent = formatCompactCurrency(total);
+                statsElements.categories.textContent = sankeyData.categoryCount;
+                if (sankeyData.totalPayerCount > 0) {
+                    statsElements.payers.textContent = `${sankeyData.visiblePayerCount}/${sankeyData.totalPayerCount}`;
+                } else {
+                    statsElements.payers.textContent = '0';
+                }
+                statsElements.latestYear.textContent = sankeyData.latestYear || '—';
+            }
+
+            function setupInteractions() {
+                const sankeyElement = document.getElementById('sankey');
+                if (!sankeyElement) {
+                    return;
+                }
+                sankeyElement.on('plotly_hover', handleHover);
+                sankeyElement.on('plotly_unhover', handleUnhover);
+                sankeyElement.on('plotly_click', handleClick);
+            }
+
+            function handleHover(event) {
+                const point = event?.points?.[0];
+                const mouseEvent = event?.event;
+                if (!point || !mouseEvent) {
+                    hideTooltip();
+                    return;
+                }
+                const meta = getMetaFromPoint(point);
+                if (!meta) {
+                    hideTooltip();
+                    return;
+                }
+                showTooltip(meta, mouseEvent.clientX, mouseEvent.clientY);
+            }
+
+            function handleUnhover() {
+                hideTooltip();
+            }
+
+            function handleClick(event) {
+                const point = event?.points?.[0];
+                if (!point) {
+                    return;
+                }
+                hideTooltip();
+
+                const meta = getMetaFromPoint(point, true);
+                if (!meta) {
+                    return;
+                }
+
+                if (meta.type === 'category' && meta.hasPayerBreakdown) {
+                    toggleCategory(meta);
+                    return;
+                }
+
+                if (meta.type === 'root-to-category' && meta.toId) {
+                    toggleCategoryById(meta.toId);
+                    return;
+                }
+
+                state.selectedMetaKey = meta.metaKey;
+                renderDetail(meta);
+            }
+
+            function getMetaFromPoint(point, preferLink = false) {
+                if (!state.sankey) {
+                    return null;
+                }
+                const metaByKey = state.sankey.metaByKey || new Map();
+
+                if (point.customdata && metaByKey.has(point.customdata)) {
+                    return metaByKey.get(point.customdata);
+                }
+
+                const isLink = point.source !== undefined && point.target !== undefined;
+                const isNode = point.label !== undefined || point.pointNumber < state.sankey.nodeMeta.length;
+
+                if (preferLink && isLink) {
+                    return state.sankey.linkMeta[point.pointNumber] || null;
+                }
+                if (!preferLink && isNode) {
+                    return state.sankey.nodeMeta[point.pointNumber] || null;
+                }
+                if (isLink) {
+                    return state.sankey.linkMeta[point.pointNumber] || null;
+                }
+                if (isNode) {
+                    return state.sankey.nodeMeta[point.pointNumber] || null;
+                }
+                return null;
+            }
+
+            function toggleCategory(meta) {
+                if (!meta || !meta.id) {
+                    return;
+                }
+                state.selectedMetaKey = meta.metaKey;
+                toggleCategoryById(meta.id);
+            }
+
+            function toggleCategoryById(categoryId) {
+                if (!categoryId) {
+                    return;
+                }
+                state.selectedMetaKey = `node:${categoryId}`;
+                if (state.expanded.has(categoryId)) {
+                    state.expanded.delete(categoryId);
+                } else {
+                    state.expanded.add(categoryId);
+                }
+                refreshSankey();
+            }
+
+            function renderDetailByKey(metaKey) {
+                if (!metaKey || !state.sankey) {
+                    resetDetailPanel();
+                    return;
+                }
+                const meta =
+                    (state.sankey.metaByKey && state.sankey.metaByKey.get(metaKey)) ||
+                    state.sankey.nodeMeta.find(item => item.metaKey === metaKey) ||
+                    state.sankey.linkMeta.find(item => item.metaKey === metaKey);
+                if (meta) {
+                    renderDetail(meta);
+                } else {
+                    state.selectedMetaKey = null;
+                    resetDetailPanel();
+                }
+            }
+
+            function renderDetail(meta) {
+                if (!detailPanel || !meta) {
+                    return;
+                }
+                state.selectedMetaKey = meta.metaKey;
+
+                const heading =
+                    meta.type === 'category'
+                        ? 'Category'
+                        : meta.type === 'payer'
+                        ? 'Payer Detail'
+                        : meta.type === 'root-to-category' || meta.type === 'category-to-payer'
+                        ? 'Flow Detail'
+                        : 'Total';
+
+                const hint =
+                    meta.type === 'category' && meta.hasPayerBreakdown
+                        ? `<p style="font-size:0.85em;color:#475569;margin-top:-8px;">Tip: Click the node to ${meta.expanded ? 'collapse' : 'expand'} payer detail.</p>`
+                        : '';
+
+                const payerPreview =
+                    meta.type === 'category' && meta.payerPreview && meta.payerPreview.length && !meta.expanded
+                        ? [
+                              '<div>',
+                              '<h4>Payer Preview</h4>',
+                              '<ul>',
+                              meta.payerPreview
+                                  .map(
+                                      payer =>
+                                          `<li>${payer.name}: ${formatBillions(payer.amount)}${
+                                              payer.percentage !== null ? ` (${formatPercentage(payer.percentage)})` : ''
+                                          }</li>`
+                                  )
+                                  .join(''),
+                              '</ul>',
+                              '</div>'
+                          ].join('')
+                        : '';
+
+                detailPanel.innerHTML = [
+                    `<h3>${heading}</h3>`,
+                    `<h2 style="font-size:1.35em;color:#111827;">${meta.name}</h2>`,
+                    hint,
+                    buildMetaSummary(meta),
+                    meta.description ? `<p style="color:#1f2937;line-height:1.6;">${meta.description}</p>` : '',
+                    payerPreview,
+                    renderNotes(meta.notes),
+                    renderSources(meta.sources)
+                ]
+                    .filter(Boolean)
+                    .join('');
+            }
+
+            function resetDetailPanel() {
+                if (!detailPanel) {
+                    return;
+                }
+                detailPanel.innerHTML = [
+                    '<h3>📖 Detail Explorer</h3>',
+                    '<p class="placeholder">Click a spending category or a payer slice to surface the full definition, methodology notes, and original data sources here.</p>'
+                ].join('');
+            }
+
+            function showTooltip(meta, x, y) {
+                if (!hoverTooltip) {
+                    return;
+                }
+                hoverTooltip.innerHTML = buildTooltipContent(meta);
+                hoverTooltip.style.left = `${x + 16}px`;
+                hoverTooltip.style.top = `${y + 16}px`;
+                hoverTooltip.classList.remove('hidden');
+            }
+
+            function hideTooltip() {
+                if (!hoverTooltip) {
+                    return;
+                }
+                hoverTooltip.classList.add('hidden');
+            }
+
+            function buildTooltipContent(meta) {
+                const parts = [
+                    `<strong>${meta.name}</strong>`,
+                    meta.amount !== undefined ? `${formatBillions(meta.amount)} (${formatPercentage(meta.percentage)})` : null,
+                    meta.description ? `<span style="color:#cbd5f5;display:block;margin-top:4px;">${truncate(meta.description, 160)}</span>` : null,
+                    meta.sources?.length
+                        ? `<span style="display:block;margin-top:6px;font-size:0.75em;color:#a5b4fc;">Source: ${meta.sources[0].organization || meta.sources[0].title || 'See detail'}</span>`
+                        : null,
+                    meta.type === 'category' && meta.hasPayerBreakdown
+                        ? `<span style="display:block;margin-top:6px;font-size:0.75em;color:#a5b4fc;">Click to ${meta.expanded ? 'collapse' : 'expand'} payer detail</span>`
+                        : null
+                ].filter(Boolean);
+                return parts.join('<br>');
+            }
+
+            function buildMetaSummary(meta) {
+                const items = [
+                    meta.amount !== undefined ? `<div class="meta-item"><strong>Amount</strong><span>${formatBillions(meta.amount)}</span></div>` : '',
+                    meta.percentage !== undefined && meta.percentage !== null ? `<div class="meta-item"><strong>Share</strong><span>${formatPercentage(meta.percentage)}</span></div>` : '',
+                    meta.units ? `<div class="meta-item"><strong>Units</strong><span>${meta.units}</span></div>` : '',
+                    meta.parentName && meta.type !== 'root-to-category' && meta.type !== 'category-to-payer'
+                        ? `<div class="meta-item"><strong>Parent</strong><span>${meta.parentName}</span></div>`
+                        : ''
+                ].filter(Boolean);
+                if (meta.type === 'root-to-category' || meta.type === 'category-to-payer') {
+                    items.push(`<div class="meta-item"><strong>From</strong><span>${meta.from}</span></div>`);
+                    items.push(`<div class="meta-item"><strong>To</strong><span>${meta.to}</span></div>`);
+                }
+                if (!items.length) {
+                    return '';
+                }
+                return `<div class="meta">${items.join('')}</div>`;
+            }
+
+            function renderNotes(notes) {
+                if (!notes || !notes.length) {
+                    return '';
+                }
+                const cleaned = notes.map(cleanText).filter(Boolean);
+                if (!cleaned.length) {
+                    return '';
+                }
+                return [
+                    '<div>',
+                    '<h4>Notes</h4>',
+                    `<ul>${cleaned.map(note => `<li>${note}</li>`).join('')}</ul>`,
+                    '</div>'
+                ].join('');
+            }
+
+            function renderSources(sources) {
+                if (!sources || !sources.length) {
+                    return '';
+                }
+                return [
+                    '<div>',
+                    '<h4>Sources</h4>',
+                    '<ul>',
+                    sources
+                        .map(source => {
+                            const parts = [
+                                source.organization || null,
+                                source.title || null,
+                                source.dataYear ? `(${source.dataYear})` : null
+                            ].filter(Boolean);
+                            const label = parts.join(' – ');
+                            const citation = cleanText(source.specificCitation || '');
+                            const citationText = citation ? `<div style="font-size:0.85em;color:#475569;margin-top:4px;">${citation}</div>` : '';
+                            if (source.url) {
+                                return `<li><a href="${source.url}" target="_blank" rel="noopener noreferrer">${label || source.url}</a>${citationText}</li>`;
+                            }
+                            return `<li>${label || 'Source'}${citationText}</li>`;
+                        })
+                        .join(''),
+                    '</ul>',
+                    '</div>'
+                ].join('');
+            }
+
+            function createHoverTemplate(meta) {
+                const parts = [
+                    `<b>${meta.name}</b>`,
+                    meta.amount !== undefined ? `${formatBillions(meta.amount)} (${formatPercentage(meta.percentage)})` : null,
+                    meta.description ? cleanText(meta.description) : null,
+                    meta.sources?.length ? `Source: ${meta.sources[0].organization || meta.sources[0].title}` : null,
+                    meta.type === 'category' && meta.hasPayerBreakdown ? `Click to ${meta.expanded ? 'collapse' : 'expand'} payer detail` : null
+                ].filter(Boolean);
+                return parts.join('<br>') + '<extra></extra>';
+            }
+
+            function createLinkHoverTemplate(meta) {
+                const parts = [
+                    `<b>${meta.from} → ${meta.to}</b>`,
+                    `Amount: ${formatBillions(meta.amount)}`,
+                    meta.percentage !== null && meta.percentage !== undefined ? `Share: ${formatPercentage(meta.percentage)}` : null
+                ].filter(Boolean);
+                return parts.join('<br>') + '<extra></extra>';
+            }
+
+            function formatBillions(amount) {
+                if (typeof amount !== 'number') {
+                    return '--';
+                }
+                return `$${amount.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}B`;
+            }
+
+            function formatCompactCurrency(amountInBillions) {
+                const dollars = amountInBillions * 1e9;
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                    notation: 'compact',
+                    maximumFractionDigits: 1
+                }).format(dollars);
+            }
+
+            function formatPercentage(value) {
+                if (value === null || value === undefined || Number.isNaN(value)) {
+                    return '—';
+                }
+                return `${value.toFixed(1)}%`;
+            }
+
+            function truncate(text, length) {
+                if (!text || text.length <= length) {
+                    return text;
+                }
+                return `${text.slice(0, length - 1)}…`;
+            }
+
+            function cleanText(text) {
+                if (!text) {
+                    return '';
+                }
+                return String(text)
+                    .replace(/:contentReference\[[^\]]*\]\{[^}]*\}/g, '')
+                    .replace(/contentReference\[[^\]]*\]\{[^}]*\}/g, '')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            }
+
+            function flattenSources(nestedSources) {
+                return nestedSources.flat().filter(Boolean);
+            }
+
+            function formatPayerName(value) {
+                return value
+                    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+                    .replace(/-/g, ' ')
+                    .replace(/\b([a-z])/g, char => char.toUpperCase());
+            }
+
+            function slugify(value) {
+                return String(value || '')
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-|-$/g, '') || 'category';
+            }
+
+            function withAlpha(hex, alpha) {
+                const cleanHex = hex.replace('#', '');
+                const bigint = parseInt(cleanHex, 16);
+                const r = (bigint >> 16) & 255;
+                const g = (bigint >> 8) & 255;
+                const b = bigint & 255;
+                return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+            }
+
+            function getLatestYear(categories) {
+                const years = categories
+                    .map(category => Number(category?.totalSpending?.year))
+                    .filter(year => !Number.isNaN(year));
+                return years.length ? Math.max(...years) : null;
+            }
+
+            function hideStatus() {
+                if (statusMessage) {
+                    statusMessage.classList.add('hidden');
+                }
+            }
+
+            function showError() {
+                if (!statusMessage) {
+                    return;
+                }
+                statusMessage.innerHTML = [
+                    '<strong>Could not load healthcare_spends_research.json directly.</strong>',
+                    'Run a local server from the project root so the shared data directory is exposed:',
+                    '<code>python3 -m http.server 8000</code>',
+                    'Then open <code>http://localhost:8000/prototype/index.html</code>'
+                ].join('<br>');
+                statusMessage.classList.remove('loading');
+                statusMessage.classList.add('error');
+            }
+
+            function getFallbackData() {
+                return {
+                    root: {
+                        id: 'total-nhe',
+                        name: 'Total National Health Expenditures',
+                        children: [
+                            {
+                                id: 'hospital-care',
+                                name: 'Hospital Care',
+                                totalSpending: {
+                                    amount: 1519.7,
+                                    units: 'USD (billion)',
+                                    year: 2023
+                                },
+                                payerBreakdown: {
+                                    privateInsurance: { amount: 562.3, percentage: 37.0 },
+                                    medicare: { amount: 379.9, percentage: 25.0 },
+                                    medicaid: { amount: 288.7, percentage: 19.0 },
+                                    outOfPocket: { amount: 45.6, percentage: 3.0 },
+                                    other: { amount: 243.2, percentage: 16.0 }
+                                },
+                                description: 'Spending on all services provided by hospitals to patients, including inpatient and outpatient care.',
+                                notes: ['Fallback values – run from a web server to see full sourced detail.']
+                            }
+                        ]
+                    }
+                };
+            }
+        })();
+    </script>
+</body>
+</html>
